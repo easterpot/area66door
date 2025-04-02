@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmetic Sequence Solver & Area Finder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            width: 80px;
+            text-align: center;
+            margin: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+        }
+        select {
+            margin-top: 10px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>arithmetic sequence</h2>
+    <div>
+        <input type="text" id="num1" placeholder="?"> 
+        <input type="text" id="num2" placeholder="?"> 
+        <input type="text" id="num3" placeholder="?"> 
+        <input type="text" id="num4" placeholder="?"> 
+    </div>
+    <button onclick="calculateMissing()">Calculate</button>
+    <h3 id="result"></h3>
+    
+    <h2>find area</h2>
+    <select id="shape" onchange="updateFields()">
+        <option value="square">Square</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="circle">Circle</option>
+        <option value="triangle">Triangle</option>
+        <option value="sphere">Sphere</option>
+        <option value="cone">Cone</option>
+        <option value="pyramid">Pyramid</option>
+        <option value="cube">Cube</option>
+        <option value="cuboid">Cuboid</option>
+    </select>
+    <div id="inputs"></div>
+    <button onclick="calculateArea()">Calculate Area</button>
+    <h3 id="areaResult"></h3>
+    
+    <script>
+        function calculateMissing() {
+            let inputs = [
+                document.getElementById("num1"),
+                document.getElementById("num2"),
+                document.getElementById("num3"),
+                document.getElementById("num4")
+            ];
+            
+            let values = inputs.map(input => input.value === "" ? null : parseFloat(input.value));
+            let knownIndices = values.map((v, i) => v !== null ? i : null).filter(i => i !== null);
+            
+            if (knownIndices.length < 2) {
+                document.getElementById("result").innerText = "enter two or more";
+                return;
+            }
+            
+            if (knownIndices.length === 3) {
+                let d1 = values[knownIndices[1]] - values[knownIndices[0]];
+                let d2 = values[knownIndices[2]] - values[knownIndices[1]];
+                if (d1 !== d2) {
+                    document.getElementById("result").innerText = "this ain't arithmetic?";
+                    return;
+                }
+            }
+            
+            let diff = (values[knownIndices[1]] - values[knownIndices[0]]) / (knownIndices[1] - knownIndices[0]);
+            
+            for (let i = knownIndices[0] - 1; i >= 0; i--) {
+                values[i] = values[i + 1] - diff;
+                inputs[i].value = values[i];
+            }
+            
+            for (let i = knownIndices[0] + 1; i < values.length; i++) {
+                if (values[i] === null) {
+                    values[i] = values[i - 1] + diff;
+                    inputs[i].value = values[i];
+                }
+            }
+            
+            document.getElementById("result").innerText = "filled";
+        }
+
+        function updateFields() {
+            let shape = document.getElementById("shape").value;
+            let inputsDiv = document.getElementById("inputs");
+            inputsDiv.innerHTML = "";
+            let fields = {
+                square: ["Side"],
+                rectangle: ["Width", "Height"],
+                circle: ["Radius"],
+                triangle: ["Base", "Height"],
+                sphere: ["Radius"],
+                cone: ["Radius", "Height"],
+                pyramid: ["Base Length", "Base Width", "Height"],
+                cube: ["Side"],
+                cuboid: ["Width", "Height", "Depth"]
+            };
+            
+            fields[shape].forEach(label => {
+                inputsDiv.innerHTML += `<label>${label}: <input type='number' id='${label.toLowerCase().replace(/ /g, "_")}'></label><br>`;
+            });
+        }
+
+        function calculateArea() {
+            let shape = document.getElementById("shape").value;
+            let getValue = id => parseFloat(document.getElementById(id).value) || 0;
+            let area = 0;
+            
+            switch (shape) {
+                case "square":
+                    area = Math.pow(getValue("side"), 2);
+                    break;
+                case "rectangle":
+                    area = getValue("width") * getValue("height");
+                    break;
+                case "circle":
+                    area = Math.PI * Math.pow(getValue("radius"), 2);
+                    break;
+                case "triangle":
+                    area = 0.5 * getValue("base") * getValue("height");
+                    break;
+                case "sphere":
+                    area = 4 * Math.PI * Math.pow(getValue("radius"), 2);
+                    break;
+                case "cone":
+                    let r = getValue("radius");
+                    let h = getValue("height");
+                    area = Math.PI * r * (r + Math.sqrt(h * h + r * r));
+                    break;
+                case "pyramid":
+                    let bl = getValue("base_length");
+                    let bw = getValue("base_width");
+                    let ph = getValue("height");
+                    area = bl * bw + 2 * bl * ph + 2 * bw * ph;
+                    break;
+                case "cube":
+                    area = 6 * Math.pow(getValue("side"), 2);
+                    break;
+                case "cuboid":
+                    let w = getValue("width");
+                    let h2 = getValue("height");
+                    let d = getValue("depth");
+                    area = 2 * (w * h2 + w * d + h2 * d);
+                    break;
+            }
+            document.getElementById("areaResult").innerText = "area: " + area.toFixed(2);
+        }
+    </script>
+</body>
+</html>
