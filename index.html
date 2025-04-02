@@ -135,7 +135,7 @@
                     area = 0.5 * getValue("base") * getValue("height");
                     break;
                 case "sphere":
-                    area = 4 * Math.PI * Math.pow(getValue("radius"), 2);
+                    area = 4/3 * Math.PI * Math.pow(getValue("radius"), 3);
                     break;
                 case "cone":
                     let r = getValue("radius");
@@ -146,16 +146,16 @@
                     let bl = getValue("base_length");
                     let bw = getValue("base_width");
                     let ph = getValue("height");
-                    area = bl * bw + 2 * bl * ph + 2 * bw * ph;
+                    area = (bl * bw * ph)/3
                     break;
                 case "cube":
-                    area = 6 * Math.pow(getValue("side"), 2);
+                    area = side * side * side
                     break;
                 case "cuboid":
                     let w = getValue("width");
                     let h2 = getValue("height");
                     let d = getValue("depth");
-                    area = 2 * (w * h2 + w * d + h2 * d);
+                    area = w * h2 * d
                     break;
             }
             document.getElementById("areaResult").innerText = "area: " + area.toFixed(2);
