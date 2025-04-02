@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-    <h2>arithmetic sequence</h2>
+    <h2>- ARITHMETIC SEQUENCE -</h2>
     <div>
         <input type="text" id="num1" placeholder="?"> 
         <input type="text" id="num2" placeholder="?"> 
@@ -36,7 +36,7 @@
     <button onclick="calculateMissing()">Calculate</button>
     <h3 id="result"></h3>
     
-    <h2>find area</h2>
+    <h2>- AREA (BROKEN) -</h2>
     <select id="shape" onchange="updateFields()">
         <option value="square">Square</option>
         <option value="rectangle">Rectangle</option>
@@ -140,7 +140,7 @@
                 case "cone":
                     let r = getValue("radius");
                     let h = getValue("height");
-                    area = Math.PI * r * (r + Math.sqrt(h * h + r * r));
+                    area = Math.PI/3 * r * r * h
                     break;
                 case "pyramid":
                     let bl = getValue("base_length");
