@@ -61,6 +61,15 @@
     <input type="text" id="romanInput" autocomplete="off" oninput="updateResult()">
     <p id="romanResult"></p>
 
+    <h2>[SHIFT CIPHER]</h2>
+    <label for="romanInput">Enter</label>
+    <div>
+        <input type="text" id="key" placeholder="= 1" autocomplete="off"> 
+        <input type="text" id="ciphertext" placeholder="????" autocomplete="off"> 
+        <button onclick="encodeCaesarCipher()">Encode</button>
+    </div>
+    <p id="plaintext"></p>
+
     <script src="https://linangdata.com/calculatorEmbed/linangcalc.js"></script>
     <div style="width:50px;height:50px;background-image:url('https://linangdata.com/calculatorEmbed/icons/48x48.png')">
       <iframe id="linangcalc" src="https://linangdata.com/calculatorEmbed/embeddable.html?placement=right" 
@@ -75,6 +84,44 @@
 
 
     <script>
+        // SHIFT
+        function encodeCaesarCipher() {
+            let keyChar = document.getElementById("key").value.toUpperCase();
+            let ciphertext = document.getElementById("ciphertext").value.toUpperCase();
+            let outputShift = document.getElementById("plaintext");
+            
+            if (!/^[A-Z]$/.test(keyChar)) {
+                outputShift.textContent = "Invalid key. Use a single letter A-Z.";
+                return;
+            }
+            
+            let keyPos = keyChar.charCodeAt(0) - 'A'.charCodeAt(0);
+            let startValue = 1;
+            let shift = keyPos + startValue;
+            let charMap = {};
+            
+            let firstLetter = String.fromCharCode(((keyPos - 1 + 26) % 26) + 'A'.charCodeAt(0));
+            charMap[firstLetter] = 0;
+            
+            for (let i = 0; i < 9; i++) {
+                let letter = String.fromCharCode(((keyPos + i) % 26) + 'A'.charCodeAt(0));
+                charMap[letter] = i + 1;
+            }
+            
+            let result = "";
+            
+            for (let char of ciphertext) {
+                if (char in charMap) {
+                    result += charMap[char];
+                } else {
+                    result += char;
+                }
+            }
+            
+            outputShift.textContent = "Decoded Text: " + result;
+        }
+
+
         // SEQUENCE
         function calculateMissing() {
             let inputs = [
