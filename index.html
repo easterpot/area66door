@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arithmetic Sequence Solver & Area Finder</title>
+    <title>area 66</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,18 +26,20 @@
     </style>
 </head>
 <body>
-    <h2>- ARITHMETIC SEQUENCE -</h2>
+    <h2>[ARITHMETIC SEQUENCE]</h2>
+    <h4>make sure to put correct number or it broke / refresh for another half</h4>
     <div>
-        <input type="text" id="num1" placeholder="?"> 
-        <input type="text" id="num2" placeholder="?"> 
-        <input type="text" id="num3" placeholder="?"> 
-        <input type="text" id="num4" placeholder="?"> 
+        <input type="text" id="num1" placeholder="?" autocomplete="off"> 
+        <input type="text" id="num2" placeholder="?" autocomplete="off"> 
+        <input type="text" id="num3" placeholder="?" autocomplete="off"> 
+        <input type="text" id="num4" placeholder="?" autocomplete="off"> 
     </div>
     <button onclick="calculateMissing()">Calculate</button>
-    <h3 id="result"></h3>
+    <p id="sequenceResult"></p>
     
-    <h2>- AREA (BROKEN RN LOL!!!) -</h2>
+    <h2>[AREA/VOLUME]</h2>
     <select id="shape" onchange="updateFields()">
+        <option value="square">pick your demon</option>
         <option value="square">Square</option>
         <option value="rectangle">Rectangle</option>
         <option value="circle">Circle</option>
@@ -47,12 +49,25 @@
         <option value="pyramid">Pyramid</option>
         <option value="cube">Cube</option>
         <option value="cuboid">Cuboid</option>
+        <option value="cylinder">Cylinder</option>
+        <option value="spyramid">Square Pyramid</option>
     </select>
     <div id="inputs"></div>
     <button onclick="calculateArea()">Calculate Area</button>
     <h3 id="areaResult"></h3>
     
+    <h2>[ROMAN NUMERAL]</h2>
+    <label for="romanInput">Enter</label>
+    <input type="text" id="romanInput" autocomplete="off" oninput="updateResult()">
+    <p id="romanResult"></p>
+
+
+
+
+
+
     <script>
+        // SEQUENCE
         function calculateMissing() {
             let inputs = [
                 document.getElementById("num1"),
@@ -65,17 +80,8 @@
             let knownIndices = values.map((v, i) => v !== null ? i : null).filter(i => i !== null);
             
             if (knownIndices.length < 2) {
-                document.getElementById("result").innerText = "enter two or more";
+                document.getElementById("sequenceResult").innerText = "enter two or more";
                 return;
-            }
-            
-            if (knownIndices.length === 3) {
-                let d1 = values[knownIndices[1]] - values[knownIndices[0]];
-                let d2 = values[knownIndices[2]] - values[knownIndices[1]];
-                if (d1 !== d2) {
-                    document.getElementById("result").innerText = "this ain't arithmetic?";
-                    return;
-                }
             }
             
             let diff = (values[knownIndices[1]] - values[knownIndices[0]]) / (knownIndices[1] - knownIndices[0]);
@@ -92,8 +98,10 @@
                 }
             }
             
-            document.getElementById("result").innerText = "filled";
+            document.getElementById("sequenceResult").innerText = "filled";
         }
+
+        // AREA
 
         function updateFields() {
             let shape = document.getElementById("shape").value;
@@ -108,7 +116,9 @@
                 cone: ["Radius", "Height"],
                 pyramid: ["Base Length", "Base Width", "Height"],
                 cube: ["Side"],
-                cuboid: ["Width", "Height", "Depth"]
+                cuboid: ["Width", "Height", "Depth"],
+                cylinder: ["Radius", "Height"],
+                spyramid: ["Base Length", "Height"]
             };
             
             fields[shape].forEach(label => {
@@ -149,7 +159,7 @@
                     area = (bl * bw * ph)/3
                     break;
                 case "cube":
-                    area = side * side * side
+                    area = getValue("side") * getValue("side") * getValue("side")
                     break;
                 case "cuboid":
                     let w = getValue("width");
@@ -157,9 +167,51 @@
                     let d = getValue("depth");
                     area = w * h2 * d
                     break;
+                case "cylinder":
+                    let r1 = getValue("radius");
+                    let h3 = getValue("height");
+                    area = Math.PI*r*r*h
+                    break;
+                case "spyramid":
+                    let h4 = getValue("height");
+                    let bl2 = getValue("base_length")
+                    area = (bl2 * bl2 * h4)/3
             }
             document.getElementById("areaResult").innerText = "area: " + area.toFixed(2);
         }
+
+        // ROMAN NUMERAL
+
+         function romanToNumber(roman) {
+            const romanNumerals = {
+                'I': 1,
+                'V': 5,
+                'X': 10,
+                'L': 50,
+                'C': 100,
+                'D': 500,
+                'M': 1000
+            };
+            let rnumber = 0;
+            for (let i = 0; i < roman.length; i++) {
+                const current = romanNumerals[roman[i]];
+                const next = romanNumerals[roman[i + 1]];
+                if (next > current) {
+                    rnumber -= current;
+                } else {
+                    rnumber += current;
+                }
+            }
+            return rnumber;
+        }
+
+        function updateResult() {
+            const romanInput = document.getElementById("romanInput").value.toUpperCase();
+            const romanResult = romanInput ? romanToNumber(romanInput) : "";
+            document.getElementById("romanResult").textContent = romanResult ? "Number: " + romanResult : "";
+        }
+
+        // END
     </script>
 </body>
 </html>
