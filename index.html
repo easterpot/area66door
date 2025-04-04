@@ -50,7 +50,6 @@
         <option value="cube">Cube</option>
         <option value="cuboid">Cuboid</option>
         <option value="cylinder">Cylinder</option>
-        <option value="spyramid">Square Pyramid</option>
     </select>
     <div id="inputs"></div>
     <button onclick="calculateArea()">Calculate Area</button>
@@ -176,8 +175,7 @@
                 pyramid: ["Base Length", "Base Width", "Height"],
                 cube: ["Side"],
                 cuboid: ["Width", "Height", "Depth"],
-                cylinder: ["Radius", "Height"],
-                spyramid: ["Base Length", "Height"]
+                cylinder: ["Radius", "Height"]
             };
             
             fields[shape].forEach(label => {
@@ -231,13 +229,8 @@
                     let h3 = getValue("height");
                     area = Math.PI*r1*r1*h3
                     break;
-                case "spyramid":
-                    let h4 = getValue("height");
-                    let bl2 = getValue("base_length")
-                    area = (bl2 * bl2 * h4)/3
-                    break;
             }
-            document.getElementById("areaResult").innerText = "area: " + area.toFixed(2);
+            document.getElementById("areaResult").innerText = "area: " + Math.round(area);
         }
 
         // ROMAN NUMERAL
